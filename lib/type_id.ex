@@ -26,7 +26,7 @@ defmodule TypeID do
   ### Example
 
       iex> TypeID.new("acct")
-      #TypeID<"acct_01h45y0sxkfmntta78gqs1vsw6">
+      ~TYPEID"acct_01h45y0sxkfmntta78gqs1vsw6"
 
   """
   @spec new(prefix :: String.t()) :: t()
@@ -52,6 +52,20 @@ defmodule TypeID do
   @spec prefix(tid :: t()) :: String.t()
   def prefix(%__MODULE__{prefix: prefix}) do
     prefix
+  end
+
+  @doc """
+  A sigil for creating a `TypeID`.
+
+  ### Example
+
+      iex> ~TYPEID"org_01h45y0sxkfmntta78gqs1vsw6"
+      ~TYPEID"org_01h45y0sxkfmntta78gqs1vsw6"
+
+  """
+  @spec sigil_TYPEID(String.t(), charlist()) :: t()
+  def sigil_TYPEID(string, _modifiers) do
+    from_string!(string)
   end
 
   @doc """
@@ -160,7 +174,7 @@ defmodule TypeID do
 
       iex> {:ok, tid} = TypeID.from("invoice", "01h45ydzqkemsb9x8gq2q7vpvb")
       iex> tid
-      #TypeID<"invoice_01h45ydzqkemsb9x8gq2q7vpvb">
+      ~TYPEID"invoice_01h45ydzqkemsb9x8gq2q7vpvb"
 
   """
   @spec from(prefix :: String.t(), suffix :: String.t()) :: {:ok, t()} | :error
@@ -200,7 +214,7 @@ defmodule TypeID do
 
       iex> {:ok, tid} = TypeID.from_string("game_01h45yhtgqfhxbcrsfbhxdsdvy")
       iex> tid
-      #TypeID<"game_01h45yhtgqfhxbcrsfbhxdsdvy">
+      ~TYPEID"game_01h45yhtgqfhxbcrsfbhxdsdvy"
 
   """
   @spec from_string(String.t()) :: {:ok, t()} | :error
@@ -226,7 +240,7 @@ defmodule TypeID do
 
       iex> {:ok, tid} = TypeID.from_uuid("device", "01890be9-b248-777e-964e-af1d244f997d")
       iex> tid
-      #TypeID<"device_01h45ykcj8exz9cknf3mj4z6bx">
+      ~TYPEID"device_01h45ykcj8exz9cknf3mj4z6bx"
 
   """
   @spec from_uuid(prefix :: String.t(), uuid :: String.t()) :: {:ok, t()} | :error
@@ -253,7 +267,7 @@ defmodule TypeID do
 
       iex> {:ok, tid} = TypeID.from_uuid_bytes("policy", <<1, 137, 11, 235, 83, 221, 116, 212, 161, 42, 205, 139, 182, 243, 175, 110>>)
       iex> tid
-      #TypeID<"policy_01h45ypmyxekaa2apdhevf7bve">
+      ~TYPEID"policy_01h45ypmyxekaa2apdhevf7bve"
 
   """
   @spec from_uuid_bytes(prefix :: String.t(), uuid_bytes :: binary()) :: {:ok, t()} | :error
@@ -319,7 +333,7 @@ defimpl Inspect, for: TypeID do
   import Inspect.Algebra
 
   def inspect(tid, _opts) do
-    concat(["#TypeID<\"", TypeID.to_string(tid), "\">"])
+    concat(["~TYPEID\"", TypeID.to_string(tid), "\""])
   end
 end
 

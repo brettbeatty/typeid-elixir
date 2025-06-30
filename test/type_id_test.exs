@@ -1,5 +1,6 @@
 defmodule TypeIDTest do
   use ExUnit.Case, async: true
+  import TypeID, only: :sigils
   doctest TypeID, except: [new: 2]
 
   describe "new/1" do
@@ -21,21 +22,45 @@ defmodule TypeIDTest do
 
   describe "prefix/1" do
     test "returns the prefix of the given TypeID" do
-      tid = TypeID.from_string!("test_01h44had5rfswbvpc383ktj0aa")
+      tid = ~TYPEID"test_01h44had5rfswbvpc383ktj0aa"
       assert "test" == TypeID.prefix(tid)
+    end
+  end
+
+  describe "sigil_TYPEID/2" do
+    test "constructs a TypeID" do
+      tid = ~TYPEID"test_01jyzaw6jbe07t67xf6aa22qdd"
+      assert "test" == TypeID.prefix(tid)
+      assert "01jyzaw6jbe07t67xf6aa22qdd" == TypeID.suffix(tid)
+    end
+
+    test "validates prefix" do
+      expected = "invalid prefix: _test. cannot start with an underscore"
+
+      assert_raise ArgumentError, expected, fn ->
+        ~TYPEID"_test_01jyzaw6jbe07t67xf6aa22qdd"
+      end
+    end
+
+    test "validates suffix" do
+      expected = "invalid base 32 suffix"
+
+      assert_raise ArgumentError, expected, fn ->
+        ~TYPEID"test_91jyzaw6jbe07t67xf6aa22qdd"
+      end
     end
   end
 
   describe "suffix/1" do
     test "returns the base 32 suffix of the given TypeID" do
-      tid = TypeID.from_string!("test_01h44had5rfswbvpc383ktj0aa")
+      tid = ~TYPEID"test_01h44had5rfswbvpc383ktj0aa"
       assert "01h44had5rfswbvpc383ktj0aa" == TypeID.suffix(tid)
     end
   end
 
   describe "serialization" do
     test "to_string/1 and from_string!/1 are idempotent" do
-      tid1 = TypeID.from_string!("test_01h44had5rfswbvpc383ktj0aa")
+      tid1 = ~TYPEID"test_01h44had5rfswbvpc383ktj0aa"
 
       tid2 =
         tid1
@@ -68,8 +93,15 @@ defmodule TypeIDTest do
   end
 
   test "verification" do
-    tid = TypeID.from_string!("test_01h44yssjcf5daefvfr0yb70s8")
+    tid = ~TYPEID"test_01h44yssjcf5daefvfr0yb70s8"
     assert "test" == TypeID.prefix(tid)
     assert "018909ec-e64c-795a-a73f-6fc03cb38328" == TypeID.uuid(tid)
+  end
+
+  describe "Inspect" do
+    test "inspects as sigil" do
+      assert inspect(~TYPEID"test_01jyzbm384fm3aaq2pvabybpmf") ==
+               ~S(~TYPEID"test_01jyzbm384fm3aaq2pvabybpmf")
+    end
   end
 end
