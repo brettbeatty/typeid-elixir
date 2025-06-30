@@ -7,7 +7,7 @@ defmodule TypeID.MixProject do
     [
       app: :typeid_elixir,
       version: @version,
-      elixir: "~> 1.11",
+      elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       description: description(),
       package: package(),
