@@ -57,6 +57,11 @@ defmodule TypeID do
   @doc """
   A sigil for creating a `TypeID`.
 
+  To use this sigil it will need imported. The `only: :sigils` option makes it easier to avoid
+  importing everything else in the module.
+
+      import TypeID, only: :sigils
+
   ### Example
 
       iex> ~TYPEID"org_01h45y0sxkfmntta78gqs1vsw6"
