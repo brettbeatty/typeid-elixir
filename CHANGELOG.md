@@ -4,7 +4,13 @@
 
 ## Unreleased
 
+### Added
 
+- "TYPEID" sigil for constructing static TypeIDs
+
+### Changed
+
+- Inspect TypeIDs as their sigil representation. This allows TypeIDs to be constructed via their inspected representation.
 
 ## 1.1.0
 
